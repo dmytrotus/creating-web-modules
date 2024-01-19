@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import { ref } from 'vue'
+import Modules from '@/UI/Modules.vue';
+import Settings from '@/UI/Settings.vue';
 
 defineProps<{
     canLogin?: boolean;
@@ -7,6 +10,13 @@ defineProps<{
     laravelVersion: string;
     phpVersion: string;
 }>();
+
+const selectedModule = ref<string|null>(null)
+
+const chooseModule = (moduleName: string | null = null): void => {
+    selectedModule.value = moduleName;
+}
+
 </script>
 
 <template>
@@ -19,33 +29,26 @@ defineProps<{
     <main class="main">
       <section class="pane available-modules-pane">
         <h3>AVAILABLE MODULES</h3>
-        <button class="available-modules-pane__button button">
+        <button @click="chooseModule('BACKGROUND')" class="available-modules-pane__button button">
           BACKGROUND
         </button>
-        <button class="available-modules-pane__button button">
+        <button @click="chooseModule('TYPO')" class="available-modules-pane__button button">
           TYPO
+        </button>
+        <button @click="chooseModule()" class="available-modules-pane__button button">
+          Clear selection
         </button>
       </section>
       <section class="pane selected-module-pane">
         <h3>SELECTED MODULE</h3>
-        <div class="selected-module-pane__module">
-          <span>BACKGROUND</span>
-        </div>
+        <Modules
+        :selectedModule="selectedModule"
+         />
       </section>
       <section class="pane module-settings-pane">
         <h3>MODULE SETTINGS</h3>
-        <div class="form-group">
-          <label for="clickout">Clickout</label>
-          <div>
-            <input
-              id="clickout"
-              type="text"
-              name="clickout"
-              placeholder="https://appverk.com"
-              value="https://appverk.com"
-            />
-          </div>
-        </div>
+        <Settings
+        v-if="selectedModule" />
       </section>
     </main>
 </template>
