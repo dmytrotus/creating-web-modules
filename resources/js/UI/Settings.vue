@@ -23,7 +23,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label>Width (%)</label>
+            <label>Height (%)</label>
             <div>
             <input
                 type="number"
