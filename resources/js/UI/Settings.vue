@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import { useMainStore } from '@/store/MainStore';
+
+const mainStore = useMainStore();
+</script>
+
 <template>
     <div class="form-group">
         <label for="clickout">Clickout</label>
@@ -7,7 +13,7 @@
             type="text"
             name="clickout"
             placeholder="https://appverk.com"
-            value="https://appverk.com"
+            v-model="mainStore.clickout"
         />
         </div>
     </div>
@@ -17,8 +23,8 @@
             <div>
             <input
                 type="number"
-                name="clickout"
-                value="50"
+                name="width"
+                v-model="mainStore.width"
             />
             </div>
         </div>
@@ -27,8 +33,8 @@
             <div>
             <input
                 type="number"
-                name="clickout"
-                value="50"
+                name="height"
+                v-model="mainStore.height"
             />
             </div>
         </div>
@@ -40,8 +46,8 @@
             <div>
             <input
                 type="number"
-                name="clickout"
-                value="0"
+                name="position_x"
+                v-model="mainStore.position_x"
             />
             </div>
         </div>
@@ -50,8 +56,8 @@
             <div>
             <input
                 type="number"
-                name="clickout"
-                value="0"
+                name="position_y"
+                v-model="mainStore.position_y"
             />
             </div>
         </div>

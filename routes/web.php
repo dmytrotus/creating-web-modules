@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomePageController;
 use Inertia\Inertia;
 
 /*
@@ -16,7 +17,9 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
+Route::get('/', [HomePageController::class, 'index']);
+
+Route::get('/welcome', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),

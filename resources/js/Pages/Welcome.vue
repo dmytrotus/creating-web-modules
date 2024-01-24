@@ -1,20 +1,39 @@
 <script setup lang="ts">
-import { Head, Link } from '@inertiajs/vue3';
-import { ref } from 'vue'
-import Modules from '@/UI/Modules.vue';
+import { Head } from '@inertiajs/vue3';
+import BackgroundModule from '@/UI/BackgroundModule.vue';
+import TypoModule from '@/UI/TypoModule.vue';
 import Settings from '@/UI/Settings.vue';
+import axios from 'axios';
+import { useMainStore } from '@/store/MainStore';
 
-defineProps<{
-    canLogin?: boolean;
-    canRegister?: boolean;
-    laravelVersion: string;
-    phpVersion: string;
-}>();
-
-const selectedModule = ref<string|null>(null)
+const mainStore = useMainStore();
 
 const chooseModule = (moduleName: string | null = null): void => {
-    selectedModule.value = moduleName;
+    mainStore.changeSelectedModule(moduleName)
+}
+
+const generateFiles = async () => {
+  try {
+    const response = await axios.post(route('generate.files'), {
+      selected_module: mainStore.selected_module,
+      clickout: mainStore.clickout,
+      width: mainStore.width,
+      height: mainStore.height,
+      position_x: mainStore.position_x,
+      position_y: mainStore.position_y,
+      background: mainStore.background
+    })
+    if (response.data) {
+      window.open(response.data);
+    }
+  } 
+  catch (err) {
+    if (axios.isAxiosError(err) && err.response) {
+      alert(err.response.data.message);
+    } else {
+      console.error(err);
+    }
+  }
 }
 
 </script>
@@ -24,15 +43,15 @@ const chooseModule = (moduleName: string | null = null): void => {
 
     <nav class="nav">
       <img src="images/logo.svg" alt="logo" />
-      <button class="button">GENERATE FILES</button>
+      <button @click="generateFiles" class="button">GENERATE FILES</button>
     </nav>
     <main class="main">
       <section class="pane available-modules-pane">
         <h3>AVAILABLE MODULES</h3>
-        <button @click="chooseModule('BACKGROUND')" class="available-modules-pane__button button">
+        <button @click="chooseModule('background')" class="available-modules-pane__button button">
           BACKGROUND
         </button>
-        <button @click="chooseModule('TYPO')" class="available-modules-pane__button button">
+        <button @click="chooseModule('typo')" class="available-modules-pane__button button">
           TYPO
         </button>
         <button @click="chooseModule()" class="available-modules-pane__button button">
@@ -41,14 +60,19 @@ const chooseModule = (moduleName: string | null = null): void => {
       </section>
       <section class="pane selected-module-pane">
         <h3>SELECTED MODULE</h3>
-        <Modules
-        :selectedModule="selectedModule"
+
+        <BackgroundModule
+          v-if="mainStore.selected_module === 'background'"
          />
+         <TypoModule
+          v-if="mainStore.selected_module === 'typo'"
+         />
+  
       </section>
       <section class="pane module-settings-pane">
         <h3>MODULE SETTINGS</h3>
         <Settings
-        v-if="selectedModule" />
+        v-if="mainStore.selected_module" />
       </section>
     </main>
 </template>
